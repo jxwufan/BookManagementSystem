@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>544</width>
+    <height>457</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="addTab">
        <attribute name="title">
@@ -349,14 +349,20 @@
               <item>
                <widget class="QLabel" name="label_5">
                 <property name="text">
-                 <string>ID: </string>
+                 <string>&amp;ID: </string>
+                </property>
+                <property name="buddy">
+                 <cstring>borrowIDEdit</cstring>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="label_6">
                 <property name="text">
-                 <string>ISBN:</string>
+                 <string>I&amp;SBN:</string>
+                </property>
+                <property name="buddy">
+                 <cstring>borrowISBNEdit</cstring>
                 </property>
                </widget>
               </item>
@@ -413,14 +419,20 @@
               <item>
                <widget class="QLabel" name="label_7">
                 <property name="text">
-                 <string>ID: </string>
+                 <string>&amp;ID: </string>
+                </property>
+                <property name="buddy">
+                 <cstring>returnIDEdit</cstring>
                 </property>
                </widget>
               </item>
               <item>
                <widget class="QLabel" name="label_8">
                 <property name="text">
-                 <string>ISBN:</string>
+                 <string>I&amp;SBN:</string>
+                </property>
+                <property name="buddy">
+                 <cstring>returnISBNEdit</cstring>
                 </property>
                </widget>
               </item>
@@ -478,28 +490,28 @@
             <item>
              <widget class="QPushButton" name="addAccountButton">
               <property name="text">
-               <string>Add an account</string>
+               <string>&amp;Add an account</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="deleteAccountButton">
               <property name="text">
-               <string>Delete an account</string>
+               <string>D&amp;elete an account</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="confirmEditButton">
               <property name="text">
-               <string>Confirm changes</string>
+               <string>&amp;Confirm changes</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="cancelEditButton">
               <property name="text">
-               <string>Discard changes</string>
+               <string>&amp;Discard changes</string>
               </property>
              </widget>
             </item>
@@ -514,6 +526,367 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>ISBNEdit</tabstop>
+  <tabstop>categoryEdit</tabstop>
+  <tabstop>titleEdit</tabstop>
+  <tabstop>publiserEdit</tabstop>
+  <tabstop>yearEdit</tabstop>
+  <tabstop>authorEdit</tabstop>
+  <tabstop>priceEdit</tabstop>
+  <tabstop>addButton</tabstop>
+  <tabstop>lineEdit</tabstop>
+  <tabstop>loadButton</tabstop>
+  <tabstop>addmultiButton</tabstop>
+  <tabstop>ISBNEdit_2</tabstop>
+  <tabstop>categoryEdit_2</tabstop>
+  <tabstop>titleEdit_2</tabstop>
+  <tabstop>publiserEdit_2</tabstop>
+  <tabstop>authorEdit_2</tabstop>
+  <tabstop>yearFromEdit</tabstop>
+  <tabstop>yearToEdit</tabstop>
+  <tabstop>priceFromEdit</tabstop>
+  <tabstop>priceToEdit</tabstop>
+  <tabstop>searchButton</tabstop>
+  <tabstop>queryTableView</tabstop>
+  <tabstop>borrowIDEdit</tabstop>
+  <tabstop>conformButton</tabstop>
+  <tabstop>borrowISBNEdit</tabstop>
+  <tabstop>borrowbutton</tabstop>
+  <tabstop>returnIDEdit</tabstop>
+  <tabstop>conformButton_2</tabstop>
+  <tabstop>returnISBNEdit</tabstop>
+  <tabstop>returnButton</tabstop>
+  <tabstop>borrowTableView</tabstop>
+  <tabstop>returnTableView</tabstop>
+  <tabstop>accountTableView</tabstop>
+  <tabstop>addAccountButton</tabstop>
+  <tabstop>confirmEditButton</tabstop>
+  <tabstop>cancelEditButton</tabstop>
+  <tabstop>deleteAccountButton</tabstop>
+ </tabstops>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>borrowIDEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>conformButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>319</x>
+     <y>66</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>438</x>
+     <y>50</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>borrowISBNEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>borrowbutton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>359</x>
+     <y>98</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>415</x>
+     <y>91</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>returnIDEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>conformButton_2</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>317</x>
+     <y>68</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>415</x>
+     <y>67</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>returnISBNEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>returnButton</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>350</x>
+     <y>97</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>414</x>
+     <y>97</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ISBNEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>categoryEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>322</x>
+     <y>96</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>320</x>
+     <y>127</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>categoryEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>titleEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>252</x>
+     <y>117</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>260</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>titleEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>publiserEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>180</x>
+     <y>155</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>186</x>
+     <y>178</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>publiserEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>yearEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>230</x>
+     <y>181</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>239</x>
+     <y>216</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yearEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>authorEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>354</x>
+     <y>222</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>362</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>authorEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>priceEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>329</x>
+     <y>251</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>282</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>priceEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>ISBNEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>170</x>
+     <y>274</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>154</x>
+     <y>89</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ISBNEdit_2</sender>
+   <signal>returnPressed()</signal>
+   <receiver>categoryEdit_2</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>327</x>
+     <y>66</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>345</x>
+     <y>95</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>categoryEdit_2</sender>
+   <signal>returnPressed()</signal>
+   <receiver>titleEdit_2</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>279</x>
+     <y>98</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>291</x>
+     <y>123</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>titleEdit_2</sender>
+   <signal>returnPressed()</signal>
+   <receiver>publiserEdit_2</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>228</x>
+     <y>128</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>237</x>
+     <y>154</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>publiserEdit_2</sender>
+   <signal>returnPressed()</signal>
+   <receiver>authorEdit_2</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>167</x>
+     <y>158</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
+     <y>179</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>authorEdit_2</sender>
+   <signal>returnPressed()</signal>
+   <receiver>yearFromEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>215</x>
+     <y>189</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>213</x>
+     <y>219</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yearFromEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>yearToEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>231</x>
+     <y>222</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>296</x>
+     <y>221</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>yearToEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>priceFromEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>360</x>
+     <y>224</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>194</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>priceFromEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>priceToEdit</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>231</x>
+     <y>257</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>322</x>
+     <y>257</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>priceToEdit</sender>
+   <signal>returnPressed()</signal>
+   <receiver>ISBNEdit_2</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>390</x>
+     <y>256</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>383</x>
+     <y>70</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
