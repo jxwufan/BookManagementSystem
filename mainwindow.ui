@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>4</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="addTab">
        <attribute name="title">
@@ -478,21 +478,21 @@
             <item>
              <widget class="QPushButton" name="addAccountButton">
               <property name="text">
-               <string>Add a account</string>
+               <string>Add an account</string>
               </property>
              </widget>
             </item>
             <item>
              <widget class="QPushButton" name="deleteAccountButton">
               <property name="text">
-               <string>Delete a account</string>
+               <string>Delete an account</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="conformEditButton">
+             <widget class="QPushButton" name="confirmEditButton">
               <property name="text">
-               <string>Conform changes</string>
+               <string>Confirm changes</string>
               </property>
              </widget>
             </item>

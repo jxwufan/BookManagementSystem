@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     logindialog.cpp
 
 HEADERS  += mainwindow.h \
-    logindialog.h
+    logindialog.h \
+    connection.h
 
 FORMS    += mainwindow.ui \
     logindialog.ui
