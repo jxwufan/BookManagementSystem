@@ -51,7 +51,7 @@ private:
     void initBorrowTab();
     void initReturnTab();
     void initAccountTab();
-    void addOneBook(QString isbn, QString category, QString title, QString publisher, QString year, QString author, QString price);
+    void addOneBook(QString isbn, QString category, QString title, QString publisher, QString year, QString author, QString price, int quantity);
     inline void empty2Null(QString &str);
     inline void str2sqlstr(QString &str);
 };

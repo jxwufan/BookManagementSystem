@@ -44,7 +44,7 @@ void MainWindow::addSingleBook()
     QString year = ui->yearEdit->text();
     QString author = ui->authorEdit->text();
     QString price = ui->priceEdit->text();
-    addOneBook(isbn, category, title, publisher, year, author, price);
+    addOneBook(isbn, category, title, publisher, year, author, price, 1);
 }
 
 void MainWindow::loadFilePath()
@@ -80,9 +80,7 @@ void MainWindow::addMultipleBooks()
             isbn.remove(QChar('('));
             quantity.remove(QChar(')'));
             int tot = quantity.toInt();
-            while (tot--) {
-                addOneBook(isbn, category, title, publisher, year, author, price);
-            }
+                addOneBook(isbn, category, title, publisher, year, author, price, tot);
         }
         this->setEnabled(true);
         QApplication::restoreOverrideCursor();
@@ -196,7 +194,7 @@ void MainWindow::initAccountTab()
     connect(ui->cancelEditButton, &QPushButton::clicked, this, &MainWindow::discardAccountChanges);
 }
 
-void MainWindow::addOneBook(QString isbn, QString category, QString title, QString publisher, QString year, QString author, QString price)
+void MainWindow::addOneBook(QString isbn, QString category, QString title, QString publisher, QString year, QString author, QString price, int quantity)
 {
     str2sqlstr(isbn);
     str2sqlstr(category);
@@ -221,9 +219,9 @@ void MainWindow::addOneBook(QString isbn, QString category, QString title, QStri
 
     if (query.next()) {
         int amount = query.value("Amount").toInt();
-        amount++;
+        amount += quantity;
         int instock = query.value("InStock").toInt();
-        instock++;
+        instock += quantity;
         qDebug() << query.exec("update book set Amount = " + QString::number(amount) + ", InStock = " + QString::number(instock) + " where ISBN = " + isbn + ";") << "update book";
         qDebug() << QString::number(amount) << " " << QString::number(instock);
     } else
