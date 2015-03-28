@@ -47,6 +47,7 @@ static bool createConnection()
                "'1586816398');");
 
     qDebug() << query.exec("insert into user values('829', 'xx', 'cmu', 'student');");// << "insert student";
+    qDebug() << query.exec("insert into book values('234', 'test', 'test', 'tset', 2015, 'me', 2.36, 1, 1);");
 
 //    query.exec("select * from record;");
 //    while(query.next())
