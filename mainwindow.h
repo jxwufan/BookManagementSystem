@@ -33,7 +33,7 @@ private slots:
     bool confirmBorrowerID();
     void borrowBook();
 
-    void confirmReturnerID();
+    bool confirmReturnerID();
     void returnBook();
 
     void addAccount();

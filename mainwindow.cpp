@@ -14,6 +14,7 @@
 #include <QFile>
 #include <QApplication>
 #include <QDate>
+#include <QTime>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -52,6 +53,7 @@ void MainWindow::addSingleBook()
     QString author = ui->authorEdit->text();
     QString price = ui->priceEdit->text();
     addOneBook(isbn, category, title, publisher, year, author, price, 1);
+    QMessageBox::information(this, "Successed", "Adding successed!", QMessageBox::Ok);
 }
 
 void MainWindow::loadFilePath()
@@ -91,12 +93,54 @@ void MainWindow::addMultipleBooks()
         }
         this->setEnabled(true);
         QApplication::restoreOverrideCursor();
+        QMessageBox::information(this, "Successed", "Adding successed!", QMessageBox::Ok);
     }
 }
 
 void MainWindow::searchBooks()
 {
+    if (!ui->priceFromEdit->text().isEmpty() && !ui->priceToEdit->text().isEmpty())
+        if (ui->priceFromEdit->text().toDouble() > ui->priceToEdit->text().toDouble()) {
+            QMessageBox::warning(this, "Error", "Invalid price value", QMessageBox::Cancel);
+            return;
+        }
+    if (!ui->yearFromEdit->text().isEmpty() && !ui->yearToEdit->text().isEmpty())
+        if (ui->yearFromEdit->text().toInt() > ui->yearToEdit->text().toInt()) {
+            QMessageBox::warning(this, "Error", "Invalid year value", QMessageBox::Cancel);
+            return;
+        }
 
+    QString filter = "";
+    bool ok = false;
+    if (!ui->ISBNEdit_2->text().isEmpty()) filter += "ISBN = " + str2sqlstr(ui->ISBNEdit_2->text()), ok = true;
+    if (!ui->categoryEdit_2->text().isEmpty()) {
+        if (ok) filter += " and "; else ok = true;
+        filter += "Category = " + str2sqlstr(ui->categoryEdit_2->text());
+    }
+    if (!ui->titleEdit_2->text().isEmpty()) {
+        if (ok) filter += " and "; else ok = true;
+        filter += "Title = " + str2sqlstr(ui->titleEdit_2->text());
+    }
+    if (!ui->publiserEdit_2->text().isEmpty()) {
+        if (ok) filter += " and "; else ok = true;
+        filter += "Publisher = " + str2sqlstr(ui->publiserEdit_2->text());
+    }
+    if (!ui->authorEdit_2->text().isEmpty()) {
+        if (ok) filter += " and "; else ok = true;
+        filter += "Author = " + str2sqlstr(ui->authorEdit_2->text());
+    }
+    if (!ui->priceFromEdit->text().isEmpty() && !ui->priceToEdit->text().isEmpty()) {
+        if (ok) filter += " and "; else ok = true;
+        filter += "Price between " + ui->priceFromEdit->text() + " and " + ui->priceToEdit->text();
+    }
+    if (!ui->yearFromEdit->text().isEmpty() && !ui->yearToEdit->text().isEmpty()) {
+        if (ok) filter += " and ";
+        filter += "Year between " + ui->yearFromEdit->text() + " and " + ui->yearToEdit->text();
+    }
+
+    queryModel->setFilter(filter);
+    queryModel->select();
+    qDebug() << filter;
 }
 
 bool MainWindow::confirmBorrowerID()
@@ -147,26 +191,59 @@ void MainWindow::borrowBook()
                     qDebug() << "insert into record values(" + str2sqlstr(id) + "," + str2sqlstr(isbn) + "," + \
                                 str2sqlstr(current.toString(format)) + "," +str2sqlstr(due.toString(format)) + "," +str2sqlstr(managerID) + ");";
                     qDebug() << query.exec("insert into record values(" + str2sqlstr(id) + "," + str2sqlstr(isbn) + "," + \
-                               str2sqlstr(current.toString(format)) + "," +str2sqlstr(due.toString(format)) + "," +str2sqlstr(managerID) + ");") << "Borrow book";
+                               str2sqlstr(current.toString(format) + " " + QTime::currentTime().toString("hh:mm:ss.zzz")) + "," +str2sqlstr(due.toString(format) + " " + QTime::currentTime().toString("hh:mm:ss.zzz")) + "," +str2sqlstr(managerID) + ");") << "Borrow book";
+                    borrowerRecordModel->select();
+
+                    QMessageBox::information(this, "Suceessed", "Borrowing successed!", QMessageBox::Ok);
                 }
             }
         }
     }
 }
 
-void MainWindow::confirmReturnerID()
+bool MainWindow::confirmReturnerID()
 {
-    if (ui->returnerIDEdit->text().isEmpty())
+    if (ui->returnerIDEdit->text().isEmpty()) {
         QMessageBox::warning(this, "Warning", "ID should not be empty!", QMessageBox::Cancel);
-    else {
-        returnerRecordModel->setFilter("ID = " + ui->returnerIDEdit->text());
-        returnerRecordModel->select();
+        return false;
+    } else {
+        qDebug() << query.exec("select * from user where ID = " + str2sqlstr(ui->returnerIDEdit->text()) + ";") << "search user";
+        if (!query.next()) {
+            QMessageBox::warning(this, "Warning", "Could not find such user", QMessageBox::Cancel);
+            return false;
+        } else {
+            returnerRecordModel->setFilter("ID = " + ui->returnerIDEdit->text());
+            returnerRecordModel->select();
+            return true;
+        }
     }
 }
 
 void MainWindow::returnBook()
 {
+    if (confirmReturnerID()) {
+        if (ui->returnISBNEdit->text().isEmpty())
+            QMessageBox::warning(this, "Warning", "ISBN should not be empty!", QMessageBox::Cancel);
+        else {
+            qDebug() << "select * from record where ID = " + str2sqlstr(ui->returnerIDEdit->text()) + " and ISBN = " + str2sqlstr(ui->returnISBNEdit->text()) + ";" << "select";
+            qDebug() << query.exec("select * from record where ID = " + str2sqlstr(ui->returnerIDEdit->text()) + " and ISBN = " + str2sqlstr(ui->returnISBNEdit->text()) + ";");
+            if (!query.next()) {
+                QMessageBox::warning(this, "Warning", "You haven't borrowed such book", QMessageBox::Cancel);
+            } else {
+                qDebug() << "update book set InStock = InStock + 1 where ISBN = " + str2sqlstr(ui->returnISBNEdit->text()) + ";";
+                qDebug() << query.exec("update book set InStock = InStock + 1 where ISBN = " + str2sqlstr(ui->returnISBNEdit->text()) + ";");
 
+                returnerRecordModel->setFilter("ID = " + ui->returnerIDEdit->text() + " and ISBN = " + ui->returnISBNEdit->text());
+                returnerRecordModel->removeRow(0);
+                returnerRecordModel->submitAll();
+
+                returnerRecordModel->setFilter("ID = " + ui->returnerIDEdit->text());
+                returnerRecordModel->select();
+
+                QMessageBox::information(this, "Successed", "Returning successed!", QMessageBox::Ok);
+            }
+        }
+    }
 }
 
 void MainWindow::addAccount()
@@ -294,7 +371,6 @@ void MainWindow::addOneBook(QString isbn, QString category, QString title, QStri
         qDebug() << QString::number(amount) << " " << QString::number(instock);
     } else
         qDebug() << query.exec("insert into book values(" + isbn + "," + category + "," + title + "," + publisher + "," + year + "," + author + "," + price + ", 1, 1);") << " insert new book";
-   queryModel->select();
 }
 
 void MainWindow::empty2Null(QString &str)
