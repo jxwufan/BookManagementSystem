@@ -17,7 +17,7 @@ public:
     explicit LoginDialog(QWidget *parent = 0);
     ~LoginDialog();
 signals:
-    void loginSuccessd();
+    void loginSuccessd(QString managerID);
 
 private slots:
     void login();

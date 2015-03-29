@@ -13,6 +13,7 @@
 #include <QFileDialog>
 #include <QFile>
 #include <QApplication>
+#include <QDate>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -33,6 +34,12 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::login(QString managerID)
+{
+    this->managerID = managerID;
+    this->show();
 }
 
 void MainWindow::addSingleBook()
@@ -92,19 +99,69 @@ void MainWindow::searchBooks()
 
 }
 
-void MainWindow::confirmBorrowerID()
+bool MainWindow::confirmBorrowerID()
 {
-
+    if (ui->borrowerIDEdit->text().isEmpty()) {
+        QMessageBox::warning(this, "Warning", "ID should not be empty!", QMessageBox::Cancel);
+        return false;
+    } else {
+        qDebug() << query.exec("select * from user where ID = " + str2sqlstr(ui->borrowerIDEdit->text()) + ";") << "search user";
+        if (!query.next()) {
+            QMessageBox::warning(this, "Warning", "Could not find such user", QMessageBox::Cancel);
+            return false;
+        } else {
+            borrowerRecordModel->setFilter("ID = " + ui->borrowerIDEdit->text());
+            borrowerRecordModel->select();
+            return true;
+        }
+    }
 }
 
 void MainWindow::borrowBook()
 {
+    if (confirmBorrowerID()) {
+        if (ui->borrowISBNEdit->text().isEmpty())
+            QMessageBox::warning(this, "Warning", "ISBN should not be empty!", QMessageBox::Cancel);
+        else {
+            qDebug() << "select InStock from book where ISBN = " + str2sqlstr(ui->borrowISBNEdit->text()) + ";";
+            qDebug() << ui->borrowISBNEdit->text();
+            qDebug() << query.exec("select * from book where ISBN = " + str2sqlstr(ui->borrowISBNEdit->text()) + ";") << "search book";
+            if (!query.next())
+                QMessageBox::warning(this, "Warning", "Could not find such book!", QMessageBox::Cancel);
+            else {
+                int instock = query.value("InStock").toInt();
+                if (instock == 0)
+                    QMessageBox::warning(this, "warning", "No book in stock", QMessageBox::Cancel);
+                else {
+                    instock--;
+                    qDebug() << "update book set InStock = " + QString::number(instock) + " where ISBN = " + str2sqlstr(ui->borrowISBNEdit->text()) + ";";
+                    qDebug() << query.exec("update book set InStock = " + QString::number(instock) + " where ISBN = " + str2sqlstr(ui->borrowISBNEdit->text()) + ";") << "update book";
+                    QString id = ui->borrowerIDEdit->text();
+                    QString isbn = ui->borrowISBNEdit->text();
+                    QDate current, due;
+                    QString format = "yyyy-MM-dd";
+                    current = QDate::currentDate();
+                    due = current;
+                    due = due.addDays(Q_INT64_C(90));
 
+                    qDebug() << "insert into record values(" + str2sqlstr(id) + "," + str2sqlstr(isbn) + "," + \
+                                str2sqlstr(current.toString(format)) + "," +str2sqlstr(due.toString(format)) + "," +str2sqlstr(managerID) + ");";
+                    qDebug() << query.exec("insert into record values(" + str2sqlstr(id) + "," + str2sqlstr(isbn) + "," + \
+                               str2sqlstr(current.toString(format)) + "," +str2sqlstr(due.toString(format)) + "," +str2sqlstr(managerID) + ");") << "Borrow book";
+                }
+            }
+        }
+    }
 }
 
 void MainWindow::confirmReturnerID()
 {
-
+    if (ui->returnerIDEdit->text().isEmpty())
+        QMessageBox::warning(this, "Warning", "ID should not be empty!", QMessageBox::Cancel);
+    else {
+        returnerRecordModel->setFilter("ID = " + ui->returnerIDEdit->text());
+        returnerRecordModel->select();
+    }
 }
 
 void MainWindow::returnBook()
@@ -165,18 +222,29 @@ void MainWindow::initQueryTab()
     queryModel->setTable("book");
     queryModel->select();
     queryModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-
     ui->queryTableView->setModel(queryModel);
 }
 
 void MainWindow::initBorrowTab()
 {
+    connect(ui->confirmButton, &QPushButton::clicked, this, &MainWindow::confirmBorrowerID);
+    connect(ui->borrowbutton, &QPushButton::clicked, this, &MainWindow::borrowBook);
 
+    borrowerRecordModel = new QSqlTableModel(this);
+    borrowerRecordModel->setTable("record");
+    borrowerRecordModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    ui->borrowTableView->setModel(borrowerRecordModel);
 }
 
 void MainWindow::initReturnTab()
 {
+    connect(ui->confirmButton_2, &QPushButton::clicked, this, &MainWindow::confirmReturnerID);
+    connect(ui->returnButton, &QPushButton::clicked, this, &MainWindow::returnBook);
 
+    returnerRecordModel = new QSqlTableModel(this);
+    returnerRecordModel->setTable("record");
+    returnerRecordModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    ui->returnTableView->setModel(returnerRecordModel);
 }
 
 void MainWindow::initAccountTab()
@@ -196,11 +264,11 @@ void MainWindow::initAccountTab()
 
 void MainWindow::addOneBook(QString isbn, QString category, QString title, QString publisher, QString year, QString author, QString price, int quantity)
 {
-    str2sqlstr(isbn);
-    str2sqlstr(category);
-    str2sqlstr(title);
-    str2sqlstr(publisher);
-    str2sqlstr(author);
+    isbn = str2sqlstr(isbn);
+    category = str2sqlstr(category);
+    title = str2sqlstr(title);
+    publisher = str2sqlstr(publisher);
+    author = str2sqlstr(author);
 
     empty2Null(isbn);
     empty2Null(category);
@@ -226,7 +294,7 @@ void MainWindow::addOneBook(QString isbn, QString category, QString title, QStri
         qDebug() << QString::number(amount) << " " << QString::number(instock);
     } else
         qDebug() << query.exec("insert into book values(" + isbn + "," + category + "," + title + "," + publisher + "," + year + "," + author + "," + price + ", 1, 1);") << " insert new book";
-    queryModel->select();
+   queryModel->select();
 }
 
 void MainWindow::empty2Null(QString &str)
@@ -234,7 +302,8 @@ void MainWindow::empty2Null(QString &str)
     if (str.isEmpty()) str = "NULL";
 }
 
-void MainWindow::str2sqlstr(QString &str)
+QString MainWindow::str2sqlstr(QString str)
 {
     if (!str.isEmpty()) str = "'" + str + "'";
+    return str;
 }

@@ -19,14 +19,18 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void login(QString managerID);
+
 private slots:
+
     void addSingleBook();
     void loadFilePath();
     void addMultipleBooks();
 
     void searchBooks();
 
-    void confirmBorrowerID();
+    bool confirmBorrowerID();
     void borrowBook();
 
     void confirmReturnerID();
@@ -41,10 +45,13 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QSqlTableModel *queryModel;
+    QSqlTableModel *borrowerRecordModel;
+    QSqlTableModel *returnerRecordModel;
     QSqlTableModel *accountModel;
     QValidator *yearValidator;
     QValidator *priceValidator;
     QSqlQuery query;
+    QString managerID;
 
     void initAddTab();
     void initQueryTab();
@@ -53,7 +60,7 @@ private:
     void initAccountTab();
     void addOneBook(QString isbn, QString category, QString title, QString publisher, QString year, QString author, QString price, int quantity);
     inline void empty2Null(QString &str);
-    inline void str2sqlstr(QString &str);
+    inline QString str2sqlstr(QString str);
 };
 
 #endif // MAINWINDOW_H

@@ -1,6 +1,5 @@
 #include "logindialog.h"
 #include "ui_logindialog.h"
-#include "mainwindow.h"
 #include <QMessageBox>
 #include <QString>
 #include <QSqlQuery>
@@ -34,7 +33,7 @@ void LoginDialog::login()
         {
             QMessageBox::information(0, "Success", "Login Success!", QMessageBox::Ok);
             this->hide();
-            emit loginSuccessd();
+            emit loginSuccessd(ui->ID_edit->text());
             this->close();
         }
         else

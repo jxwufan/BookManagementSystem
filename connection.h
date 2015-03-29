@@ -49,6 +49,8 @@ static bool createConnection()
     qDebug() << query.exec("insert into user values('829', 'xx', 'cmu', 'student');");// << "insert student";
     qDebug() << query.exec("insert into book values('234', 'test', 'test', 'tset', 2015, 'me', 2.36, 1, 1);");
 
+    qDebug() << query.exec("insert into record values('123', '1234', '2010-10-10', '2015-10-10', '3130000889');");
+
 //    query.exec("select * from record;");
 //    while(query.next())
 //        qDebug() << query.value("DueDate").toString();

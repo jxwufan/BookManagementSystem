@@ -10,13 +10,12 @@ int main(int argc, char *argv[])
 
     createConnection();
 
-//    LoginDialog loginDialog;
-//    loginDialog.show();
+    LoginDialog loginDialog;
+    loginDialog.show();
 
     MainWindow mainWindow;
-    mainWindow.show();
 
- //   QObject::connect(&loginDialog, &LoginDialog::loginSuccessd, &mainWindow, &MainWindow::show);
+    QObject::connect(&loginDialog, &LoginDialog::loginSuccessd, &mainWindow, &MainWindow::login);
 
     return a.exec();
 }
