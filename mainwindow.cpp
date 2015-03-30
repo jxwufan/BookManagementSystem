@@ -233,11 +233,12 @@ void MainWindow::returnBook()
                 qDebug() << "update book set InStock = InStock + 1 where ISBN = " + str2sqlstr(ui->returnISBNEdit->text()) + ";";
                 qDebug() << query.exec("update book set InStock = InStock + 1 where ISBN = " + str2sqlstr(ui->returnISBNEdit->text()) + ";");
 
-                returnerRecordModel->setFilter("ID = " + ui->returnerIDEdit->text() + " and ISBN = " + ui->returnISBNEdit->text());
-                returnerRecordModel->removeRow(0);
-                returnerRecordModel->submitAll();
+                qDebug() << "select * from record where ID = " + str2sqlstr(ui->returnerIDEdit->text()) + " and ISBN = " + str2sqlstr(ui->returnISBNEdit->text()) + ";" << "select";
+                qDebug() << query.exec("select * from record where ID = " + str2sqlstr(ui->returnerIDEdit->text()) + " and ISBN = " + str2sqlstr(ui->returnISBNEdit->text()) + ";");
+                query.next();
 
-                returnerRecordModel->setFilter("ID = " + ui->returnerIDEdit->text());
+                qDebug() <<"delete from record where ID = " + str2sqlstr(ui->returnerIDEdit->text()) + " and ISBN = " + str2sqlstr(ui->returnISBNEdit->text()) + " and BorrowDate = " + str2sqlstr(query.value("BorrowDate").toString()) + ";";
+                qDebug() << query.exec("delete from record where ID = " + str2sqlstr(ui->returnerIDEdit->text()) + " and ISBN = " + str2sqlstr(ui->returnISBNEdit->text()) + " and BorrowDate = " + str2sqlstr(query.value("BorrowDate").toString()) + ";") << "delete";
                 returnerRecordModel->select();
 
                 QMessageBox::information(this, "Successed", "Returning successed!", QMessageBox::Ok);
