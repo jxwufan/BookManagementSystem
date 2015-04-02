@@ -53,7 +53,7 @@ void MainWindow::addSingleBook()
     QString author = ui->authorEdit->text();
     QString price = ui->priceEdit->text();
     addOneBook(isbn, category, title, publisher, year, author, price, 1);
-    QMessageBox::information(this, "Successed", "Adding successed!", QMessageBox::Ok);
+    QMessageBox::information(this, "completed", "Operation completed!", QMessageBox::Ok);
 }
 
 void MainWindow::loadFilePath()
@@ -89,11 +89,12 @@ void MainWindow::addMultipleBooks()
             isbn.remove(QChar('('));
             quantity.remove(QChar(')'));
             int tot = quantity.toInt();
+            qDebug() << list;
                 addOneBook(isbn, category, title, publisher, year, author, price, tot);
         }
         this->setEnabled(true);
         QApplication::restoreOverrideCursor();
-        QMessageBox::information(this, "Successed", "Adding successed!", QMessageBox::Ok);
+        QMessageBox::information(this, "Complete", "Operation completed!", QMessageBox::Ok);
     }
 }
 
@@ -368,10 +369,11 @@ void MainWindow::addOneBook(QString isbn, QString category, QString title, QStri
         amount += quantity;
         int instock = query.value("InStock").toInt();
         instock += quantity;
+        qDebug() <<  "update book set Amount = " + QString::number(amount) + ", InStock = " + QString::number(instock) + " where ISBN = " + isbn + ";";
         qDebug() << query.exec("update book set Amount = " + QString::number(amount) + ", InStock = " + QString::number(instock) + " where ISBN = " + isbn + ";") << "update book";
         qDebug() << QString::number(amount) << " " << QString::number(instock);
     } else
-        qDebug() << query.exec("insert into book values(" + isbn + "," + category + "," + title + "," + publisher + "," + year + "," + author + "," + price + ", 1, 1);") << " insert new book";
+        qDebug() << query.exec("insert into book values(" + isbn + "," + category + "," + title + "," + publisher + "," + year + "," + author + "," + price + ", " + QString::number(quantity) + ", " + QString::number(quantity) + ");" ) << " insert new book";
 }
 
 void MainWindow::empty2Null(QString &str)
