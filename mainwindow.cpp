@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent) :
     initBorrowTab();
     initReturnTab();
     initAccountTab();
+
+    this->setCentralWidget(ui->centralwidget);
 }
 
 MainWindow::~MainWindow()
@@ -113,22 +115,22 @@ void MainWindow::searchBooks()
 
     QString filter = "";
     bool ok = false;
-    if (!ui->ISBNEdit_2->text().isEmpty()) filter += "ISBN = " + str2sqlstr(ui->ISBNEdit_2->text()), ok = true;
+    if (!ui->ISBNEdit_2->text().isEmpty()) filter += "ISBN like " + str2sqlstr("%" + ui->ISBNEdit_2->text() + "%"), ok = true;
     if (!ui->categoryEdit_2->text().isEmpty()) {
         if (ok) filter += " and "; else ok = true;
-        filter += "Category = " + str2sqlstr(ui->categoryEdit_2->text());
+        filter += "Category like " + str2sqlstr("%" + ui->categoryEdit_2->text() + "%");
     }
     if (!ui->titleEdit_2->text().isEmpty()) {
         if (ok) filter += " and "; else ok = true;
-        filter += "Title = " + str2sqlstr(ui->titleEdit_2->text());
+        filter += "Title like " + str2sqlstr("%" + ui->titleEdit_2->text() + "%");
     }
     if (!ui->publiserEdit_2->text().isEmpty()) {
         if (ok) filter += " and "; else ok = true;
-        filter += "Publisher = " + str2sqlstr(ui->publiserEdit_2->text());
+        filter += "Publisher like %" + str2sqlstr("%" + ui->publiserEdit_2->text() + "%");
     }
     if (!ui->authorEdit_2->text().isEmpty()) {
         if (ok) filter += " and "; else ok = true;
-        filter += "Author = " + str2sqlstr(ui->authorEdit_2->text());
+        filter += "Author like %" + str2sqlstr("%" + ui->authorEdit_2->text() + "%");
     }
     if (!ui->priceFromEdit->text().isEmpty() && !ui->priceToEdit->text().isEmpty()) {
         if (ok) filter += " and "; else ok = true;
